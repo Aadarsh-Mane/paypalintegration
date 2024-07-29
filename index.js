@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(express.json()); // Parse JSON-encoded bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
-
+app.use(cors());
 admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.projectid,
