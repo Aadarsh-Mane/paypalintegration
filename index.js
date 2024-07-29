@@ -133,6 +133,9 @@ app.get("/cancel", (req, res) => {
 // checking port on local server
 
 // checking port on local server
+app.get("/", (req, res) => {
+  res.send("Welcome to the Wallpaper Shop!");
+});
 app.listen(PORT, () => {
   console.log(`listening on ${PORT}`);
 });
