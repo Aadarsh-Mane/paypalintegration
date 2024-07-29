@@ -110,23 +110,16 @@ app.get("/success", async (req, res) => {
         console.log(error.response);
         res.status(500).send("Payment execution failed");
       } else {
-        // Generate access token
-        const accessToken = uuidv4();
-
-        // Store purchase information in Firestore
-        await db.collection("purchases").add({
-          wallpaperId: wallpaperId,
-          accessToken: accessToken,
-          timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        // Update wallpaper document to unlock it
+        await db.collection("wallpaperOfTheDay").doc(wallpaperId).update({
+          isLock: false,
         });
 
-        // Send access token to the client
-        res.send({ accessToken: accessToken });
+        res.send("Payment success and wallpaper unlocked.");
       }
     }
   );
 });
-
 // Endpoint to handle PayPal payment cancellation
 app.get("/cancel", (req, res) => {
   res.send("Payment was cancelled.");
