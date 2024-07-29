@@ -6,6 +6,8 @@ import dotenv from "dotenv";
 import PayPal from "paypal-rest-sdk";
 import { v4 as uuidv4 } from "uuid";
 
+import cors from "cors";
+
 dotenv.config(); // Load environment variables from .env file
 
 const PORT = process.env.PORT || 5000;
@@ -43,8 +45,8 @@ app.post("/purchase", async (req, res) => {
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: `http://localhost:4000/success?wallpaperId=${wallpaperId}`,
-      cancel_url: `http://localhost:4000/cancel?wallpaperId=${wallpaperId}`,
+      return_url: `https://paypalintegration.onrender.com/success?wallpaperId=${wallpaperId}`,
+      cancel_url: `https://paypalintegration.onrender.com/cancel?wallpaperId=${wallpaperId}`,
     },
     transactions: [
       {
