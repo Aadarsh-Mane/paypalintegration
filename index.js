@@ -37,7 +37,7 @@ PayPal.configure({
 // Endpoint to handle purchase
 // Endpoint to handle purchase
 app.post("/purchase", async (req, res) => {
-  const { wallpaperId } = req.body;
+  const { wallpaperId, userId } = req.body;
 
   const createPaymentJson = {
     intent: "sale",
@@ -45,7 +45,7 @@ app.post("/purchase", async (req, res) => {
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: `https://paypalintegration.onrender.com/success?wallpaperId=${wallpaperId}`,
+      return_url: `https://paypalintegration.onrender.com/success?wallpaperId=${wallpaperId}&userId=${userId}`,
       cancel_url: `https://paypalintegration.onrender.com/cancel?wallpaperId=${wallpaperId}`,
     },
     transactions: [
@@ -84,11 +84,11 @@ app.post("/purchase", async (req, res) => {
   });
 });
 
-// Endpoint to handle PayPal payment success
 app.get("/success", async (req, res) => {
   const payerId = req.query.PayerID;
   const paymentId = req.query.paymentId;
   const wallpaperId = req.query.wallpaperId;
+  const userId = req.query.userId;
 
   const executePaymentJson = {
     payer_id: payerId,
@@ -110,16 +110,23 @@ app.get("/success", async (req, res) => {
         console.log(error.response);
         res.status(500).send("Payment execution failed");
       } else {
-        // Update wallpaper document to unlock it
-        await db.collection("wallpaperOfTheDay").doc(wallpaperId).update({
-          isLock: false,
-        });
+        // Store purchase information in Firestore
+        await db
+          .collection("userPurchases")
+          .doc(userId)
+          .set(
+            {
+              [wallpaperId]: true,
+            },
+            { merge: true }
+          );
 
-        res.send("Payment success and wallpaper unlocked.");
+        res.send("Payment success and wallpaper unlocked for user.");
       }
     }
   );
 });
+
 // Endpoint to handle PayPal payment cancellation
 app.get("/cancel", (req, res) => {
   res.send("Payment was cancelled.");
