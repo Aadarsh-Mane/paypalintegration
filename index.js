@@ -10,10 +10,12 @@ import cors from "cors";
 
 dotenv.config(); // Load environment variables from .env file
 
+const app = express();
 const PORT = process.env.PORT || 5000;
 // import key from './myschool.json' with { type: "json" };
+app.set("view engine", "ejs");
+app.set("views", "./views"); // The directory where your EJS files will be stored
 
-const app = express();
 app.use(express.json()); // Parse JSON-encoded bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(cors());
@@ -121,7 +123,8 @@ app.get("/success", async (req, res) => {
             { merge: true }
           );
 
-        res.send("Payment success and wallpaper unlocked for user.");
+        // res.send("Payment success and wallpaper unlocked for user.");
+        res.render("success");
       }
     }
   );
