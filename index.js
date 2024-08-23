@@ -31,7 +31,7 @@ admin.initializeApp({
 });
 const db = admin.firestore(); // Get Firestore instance
 PayPal.configure({
-  mode: "sandbox", // Change to 'live' for production
+  mode: "live", // Change to 'live' for production
   client_id: process.env.PAYPAL_CLIENT_ID,
   client_secret: process.env.PAYPAL_CLIENT_SECRET,
 });
@@ -57,7 +57,7 @@ app.post("/purchase", async (req, res) => {
             {
               name: "Wallpaper Purchase",
               sku: "001",
-              price: "10.00",
+              price: "3.00",
               currency: "USD",
               quantity: 1,
             },
@@ -65,7 +65,7 @@ app.post("/purchase", async (req, res) => {
         },
         amount: {
           currency: "USD",
-          total: "10.00",
+          total: "3.00",
         },
         description: "Purchase premium wallpaper.",
       },
@@ -98,7 +98,7 @@ app.get("/success", async (req, res) => {
       {
         amount: {
           currency: "USD",
-          total: "10.00",
+          total: "3.00",
         },
       },
     ],
